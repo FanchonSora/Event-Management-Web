@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/logging.dart';
 import 'package:mobile/get_geo_location.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(const MyApp());
@@ -69,9 +70,10 @@ class _MyHomePageState extends State<MyHomePage> {
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
       _counter++;
-      log.d("clicked");
     });
     log.d(await Util.determinePosition());
+    http.Response res = await http.get(Uri.parse("http://172.18.0.1:3000"));
+    log.d(res.body);
   }
 
   @override
