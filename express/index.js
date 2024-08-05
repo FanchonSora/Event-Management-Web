@@ -1,18 +1,26 @@
-const express = require("express");
-const cors = require("cors");
-const dotenv = require("dotenv");
-const mongoose = require("mongoose");
-const cookieParser = require("cookie-parser");
+import express, { json } from "express";
+import cors from "cors";
+import { config } from "dotenv";
+import { connect } from "mongoose";
+import cookieParser from "cookie-parser";
+import authRoute from "./routes/auth.js";
 
-dotenv.config();
+config();
 const app = express();
 
-mongoose.connect(process.env.MONGODB_URL)
+connect(process.env.MONGODB_URL)
 
 app.use(cors());
 app.use(cookieParser());
-app.use(express.json());
+app.use(json());
+
+// routes
+app.use("/v1/auth", authRoute);
+
 
 app.listen(8000, () => {
     console.log("Server is running");
 });
+
+// authentication
+// authorization
