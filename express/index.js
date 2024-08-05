@@ -1,17 +1,27 @@
-// Suggested code may be subject to a license. Learn more: ~LicenseLog:2406396442.
-// Suggested code may be subject to a license. Learn more: ~LicenseLog:481154180.
-// Suggested code may be subject to a license. Learn more: ~LicenseLog:2635277472.
-import express from 'express';
-import cors from 'cors';
+import express, { json } from "express";
+import cors from "cors";
+import { config } from "dotenv";
+import { connect } from "mongoose";
+import cookieParser from "cookie-parser";
+import authRoute from "./routes/auth.js";
 
-const app = express()
- app.use(cors())
+config();
+const app = express();
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-  console.log("Requested")
-})
+connect(process.env.MONGODB_URL)
+.then(() => console.log("Connected to MongoDB"))
 
-app.listen(3000, () => {
-  console.log('Example app listening on port 3000')
-})
+app.use(cors());
+app.use(cookieParser());
+app.use(json());
+
+// routes
+app.use("/v1/auth", authRoute);
+
+
+app.listen(8000, () => {
+    console.log("Server is running at http://localhost:8000");
+});
+
+// authentication
+// authorization
