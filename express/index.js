@@ -1,17 +1,17 @@
-import express, { json } from "express";
-import cors from "cors";
-import { config } from "dotenv";
-import { connect } from "mongoose";
-import cookieParser from "cookie-parser";
+const express = require("express");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const mongoose = require("mongoose");
+const cookieParser = require("cookie-parser");
 
-config();
+dotenv.config();
 const app = express();
 
-connect(process.env.MONGODB_URL)
+mongoose.connect(process.env.MONGODB_URL)
 
 app.use(cors());
 app.use(cookieParser());
-app.use(json());
+app.use(express.json());
 
 app.listen(8000, () => {
     console.log("Server is running");
