@@ -74,7 +74,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                 const SizedBox(height: 20),
                 TextField(
                   controller: _usernameController,
-                  style: TextStyle(color: Color.fromARGB(255,255,255,255)),
+                  style: const TextStyle(color: Color.fromARGB(255,255,255,255)),
                   decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
