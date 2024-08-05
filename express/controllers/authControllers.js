@@ -1,5 +1,5 @@
 import User from "../models/User.js";
-import { genSalt, hash } from "bcrypt";
+import { genSalt, hash, compare } from "bcrypt";
 
 export const registerUser = async (req, res) => {
     try{
@@ -24,21 +24,25 @@ export const registerUser = async (req, res) => {
 
 export const loginUser = async(req, res) => {
     try {
+
+        console.log(req.body)
         const user = await User.findOne({username: req.body.username});
         if(!user) {
             res.status(404).json("Wrong username!");
         }
-        const validPassword = await bcrypt.compare(
+        const validPassword = compare(
             req.body.password,
             user.password
         );
         if(!validPassword) {
             res.status(404).json("Wrong password");
+            return;
         }
         if(user && validPassword) {
             res.status(202).json(user);
         }
     }catch(err) {
+        console.log(err);
         res.status(500).json(err);
     }
 }
