@@ -9,6 +9,10 @@ config();
 const app = express();
 
 connect(process.env.MONGODB_URL)
+.then(() => console.log("Connected to MongoDB"))
+.catch(err => {
+    console.log(err, "lỗi r")
+})
 
 app.use(cors());
 app.use(cookieParser());
