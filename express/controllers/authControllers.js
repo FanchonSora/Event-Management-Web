@@ -2,9 +2,7 @@ import User from "../models/User.js";
 import { genSalt, hash } from "bcrypt";
 
 
-const authController = {
-    //register 
-    registerUser: async(req, res) => {
+    export const registerUser = async(req, res) => {
         try{
             // Hashed user password 
             const salt = await genSalt(10);
@@ -23,7 +21,4 @@ const authController = {
         }catch(err){
             res.status(404).json(err);
         }
-    }, 
-}
-
-export default authController;
+    }
