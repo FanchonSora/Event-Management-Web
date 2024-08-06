@@ -1,6 +1,6 @@
-import { getAllUsers } from "../controllers/userController";
-
-const router = require("express").Router();
+import { getAllUsers } from "../controllers/userController.js";
+import { Router } from "express";
+const router = Router();
 
 // get all users
 router.get("/", getAllUsers)

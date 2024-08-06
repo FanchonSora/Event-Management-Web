@@ -18,7 +18,7 @@ app.use(json());
 
 // routes
 app.use("/v1/auth", authRoute);
-app.use("/v1/auth", userRoute);
+app.use("/v1/user", userRoute);
 
 app.listen(8000, () => {
     console.log("Server is running at http://localhost:8000");
