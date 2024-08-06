@@ -24,6 +24,8 @@ export const registerUser = async (req, res) => {
 
 export const loginUser = async(req, res) => {
     try {
+
+        console.log(req.body)
         const user = await User.findOne({username: req.body.username});
         if(!user) {
             res.status(404).json("Wrong username!");
@@ -34,11 +36,13 @@ export const loginUser = async(req, res) => {
         );
         if(!validPassword) {
             res.status(404).json("Wrong password");
+            return;
         }
         if(user && validPassword) {
             res.status(202).json(user);
         }
     }catch(err) {
+        console.log(err);
         res.status(500).json(err);
     }
 }

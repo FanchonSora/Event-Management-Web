@@ -11,9 +11,6 @@ const app = express();
 
 connect(process.env.MONGODB_URL)
 .then(() => console.log("Connected to MongoDB"))
-.catch(err => {
-    console.log(err, "lỗi r")
-})
 
 app.use(cors());
 app.use(cookieParser());
@@ -24,7 +21,7 @@ app.use("/v1/auth", authRoute);
 app.use("/v1/auth", userRoute);
 
 app.listen(8000, () => {
-    console.log("Server is running");
+    console.log("Server is running at http://localhost:8000");
 });
 
 // authentication
