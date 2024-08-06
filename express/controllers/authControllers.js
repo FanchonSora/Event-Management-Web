@@ -1,5 +1,5 @@
 import User from "../models/User.js";
-import { genSalt, hash } from "bcrypt";
+import { genSalt, hash, compare } from "bcrypt";
 
 export const registerUser = async (req, res) => {
     try{
@@ -28,7 +28,7 @@ export const loginUser = async(req, res) => {
         if(!user) {
             res.status(404).json("Wrong username!");
         }
-        const validPassword = await bcrypt.compare(
+        const validPassword = compare(
             req.body.password,
             user.password
         );
