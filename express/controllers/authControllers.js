@@ -98,3 +98,9 @@ export const requestRefreshToken = async(req, res) => {
         res.status(200).json({accessToken: newAccessToken});
     })
 }
+
+export const userLogout = async(req, res) => {
+    res.clearCookie("refreshToken");
+    refreshTokens = refreshTokens.filter(token => token !== req.cookies.refreshToken);
+    res.status(200).json("Log out successfully");
+}
