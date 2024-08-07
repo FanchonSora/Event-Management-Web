@@ -4,6 +4,7 @@ import { config } from "dotenv";
 import { connect } from "mongoose";
 import cookieParser from "cookie-parser";
 import authRoute from "./routes/auth.js";
+import userRoute from "./routes/user.js";
 
 config();
 const app = express();
@@ -17,7 +18,7 @@ app.use(json());
 
 // routes
 app.use("/v1/auth", authRoute);
-
+app.use("/v1/user", userRoute);
 
 app.listen(8000, () => {
     console.log("Server is running at http://localhost:8000");
