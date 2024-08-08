@@ -13,6 +13,8 @@ class MyLandingPage extends StatefulWidget {
 }
 
 class _MyLandingPageState extends State<MyLandingPage> {
+  int _counter = 0;
+
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) =>
@@ -28,8 +30,17 @@ class _MyLandingPageState extends State<MyLandingPage> {
       appBar: AppBar(
         title: const Text('Landing Page'),
       ),
-      body: const Center(
-        child: Text('Landing Page'),
+      body: Column(
+        children: [
+          Center(
+            child: FloatingActionButton( child:Text('$_counter'), onPressed: () => {
+              setState(() {
+                _counter++;
+              })
+            },),
+          ),
+          _counter == 10 ? const Text("Hoa gay") : const Text("Hoa ko gay")
+        ],
       ),
     );
   }

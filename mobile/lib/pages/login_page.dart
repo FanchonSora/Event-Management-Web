@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/components/square_tile.dart';
 import 'package:mobile/components/my_button.dart';
+import 'package:http/http.dart' as http;
+import 'package:mobile/pages/home_page.dart';
+import 'package:mobile/utils/logging.dart';
+import 'dart:convert';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -10,9 +14,30 @@ class LoginPage extends StatelessWidget {
   final passwordController = TextEditingController();
 
   // sign user in method
-  void signUserIn(context) {
-    // Implement sign-in functionality here
-    Navigator.of(context).pushNamed('/home');
+  Future<void> signUserIn(BuildContext context) async {
+     
+    logger.d({
+        'username': usernameController.text,
+        'password': passwordController.text,
+      });
+
+    final response = await http.post(
+      Uri.parse('http://172.17.0.1:8000/v1/auth/login'), 
+      headers: {
+        "Content-type": "application/json"
+      },
+      body: jsonEncode({
+        'username': usernameController.text,
+        'password': passwordController.text,
+      })
+    ); 
+    logger.i(response.body);
+
+    if (response.statusCode == 200){
+      if (context.mounted) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage()));
+      }
+    }
   }
 
   @override
@@ -136,9 +161,11 @@ class LoginPage extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        MyButton(onTap: () {
-                          signUserIn(context);
-                        }),
+                        MyButton(
+                          onTap: () => {
+                            signUserIn(context)
+                          },
+                        ),
                         const SizedBox(height: 20),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
