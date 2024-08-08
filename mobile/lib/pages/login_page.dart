@@ -34,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
     logger.i(response.body);
 
     if (context.mounted) {
-      Navigator.pushReplacement(
+      Navigator.push(
           context, MaterialPageRoute(builder: (context) => const HomePage()));
     }
   }
