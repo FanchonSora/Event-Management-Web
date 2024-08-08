@@ -45,6 +45,7 @@ export const loginUser = async(req, res) => {
         const user = await User.findOne({username: req.body.username});
         if(!user) {
             res.status(404).json("Wrong username!");
+            return;
         }
         const validPassword = compare(
             req.body.password,

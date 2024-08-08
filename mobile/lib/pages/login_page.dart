@@ -3,6 +3,8 @@ import 'package:mobile/components/square_tile.dart';
 import 'package:mobile/components/my_button.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobile/pages/home_page.dart';
+import 'package:mobile/utils/logging.dart';
+import 'dart:convert';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -13,16 +15,23 @@ class LoginPage extends StatelessWidget {
 
   // sign user in method
   Future<void> signUserIn(BuildContext context) async {
-    final response = await http.post(
-      Uri.parse('http://localhost:8000/v1/auth/login'),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: {
+     
+    logger.d({
         'username': usernameController.text,
         'password': passwordController.text,
+      });
+
+    final response = await http.post(
+      Uri.parse('http://172.17.0.1:8000/v1/auth/login'), 
+      headers: {
+        "Content-type": "application/json"
       },
-    );
+      body: jsonEncode({
+        'username': usernameController.text,
+        'password': passwordController.text,
+      })
+    ); 
+    logger.i(response.body);
 
     if (response.statusCode == 200){
       if (context.mounted) {
@@ -58,9 +67,10 @@ class LoginPage extends StatelessWidget {
                           Color.fromARGB(0, 255, 255, 255),
                           Color.fromARGB(38, 255, 255, 255),
                           Color.fromARGB(54, 255, 255, 255),
-                          Color.fromARGB(96, 255, 255, 255), 
-                          Color.fromARGB(128, 255, 255, 255)],
-                        ),
+                          Color.fromARGB(96, 255, 255, 255),
+                          Color.fromARGB(128, 255, 255, 255)
+                        ],
+                      ),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
                     padding: const EdgeInsets.all(16.0),
@@ -144,7 +154,7 @@ class LoginPage extends StatelessWidget {
                                   decorationColor: Colors.grey,
                                   decorationThickness: 1.0,
                                   fontStyle: FontStyle.italic,
-                                  decorationStyle: TextDecorationStyle.solid, 
+                                  decorationStyle: TextDecorationStyle.solid,
                                 ),
                               ),
                             ],
@@ -168,7 +178,8 @@ class LoginPage extends StatelessWidget {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
                                 child: Text(
                                   "Or continue with",
                                   style: TextStyle(color: Colors.grey[400]),
