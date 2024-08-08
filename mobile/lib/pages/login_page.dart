@@ -6,18 +6,18 @@ import 'package:http/http.dart' as http;
 import 'package:mobile/pages/home_page.dart';
 import 'package:mobile/utils/logging.dart';
 import 'dart:convert';
+import 'package:mobile/utils/api.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
-
 }
 
 class _LoginPageState extends State<LoginPage> {
   // text editing controllers
-  final emailController= TextEditingController();
+  final emailController = TextEditingController();
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   final repeatPasswordController = TextEditingController();
@@ -25,24 +25,19 @@ class _LoginPageState extends State<LoginPage> {
   bool isLogin = true;
   // sign user in method
   Future<void> signUserIn(BuildContext context) async {
-     
-    final response = await http.post(
-      Uri.parse('http://172.17.0.1:8000/v1/auth/login'), 
-      headers: {
-        "Content-type": "application/json"
-      },
-      body: jsonEncode({
-        'username': usernameController.text,
-        'password': passwordController.text,
-      })
-    ); 
+    final response = await http.post(Uri.parse('$localhost/v1/auth/login'),
+        headers: {"Content-type": "application/json"},
+        body: jsonEncode({
+          'username': usernameController.text,
+          'password': passwordController.text,
+        }));
     logger.i(response.body);
 
-    if (response.statusCode == 200){
+    if (response.statusCode == 200) {
       if (context.mounted) {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage()));
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => const HomePage()));
       }
-
     }
   }
 
@@ -83,11 +78,12 @@ class _LoginPageState extends State<LoginPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        if(!isLogin)MyTextField(
-                          controller: emailController,
-                          labelText: 'Email',
-                          obscure: false,
-                        ),
+                        if (!isLogin)
+                          MyTextField(
+                            controller: emailController,
+                            labelText: 'Email',
+                            obscure: false,
+                          ),
                         const SizedBox(height: 20),
                         MyTextField(
                           controller: usernameController,
@@ -101,11 +97,12 @@ class _LoginPageState extends State<LoginPage> {
                           obscure: true,
                         ),
                         const SizedBox(height: 20),
-                        if(!isLogin) MyTextField( 
-                          controller: repeatPasswordController,
-                          labelText: 'Repeat Password',
-                          obscure: true,
-                        ),
+                        if (!isLogin)
+                          MyTextField(
+                            controller: repeatPasswordController,
+                            labelText: 'Repeat Password',
+                            obscure: true,
+                          ),
                         const SizedBox(height: 20),
                         const Padding(
                           padding: EdgeInsets.symmetric(horizontal: 0),
@@ -129,9 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         const SizedBox(height: 20),
                         MyButton(
-                          onTap: () => {
-                            signUserIn(context)
-                          },
+                          onTap: () => {signUserIn(context)},
                         ),
                         const SizedBox(height: 20),
                         Padding(
@@ -179,23 +174,22 @@ class _LoginPageState extends State<LoginPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        isLogin ? 'Don\'t have an account?' : 'Already have an account? ',
+                        isLogin
+                            ? 'Don\'t have an account?'
+                            : 'Already have an account? ',
                         style: TextStyle(color: Colors.grey[500]),
                       ),
                       const SizedBox(width: 4),
                       TextButton(
-                        style: TextButton.styleFrom(
-                          foregroundColor: Colors.blue,
-                        ),                  
-                        onPressed: () => {
-                          setState(() {
-                            isLogin = !isLogin;
-                          })
-                        },
-                        child: Text(isLogin ? 'Sign up' : 'Sign in')
-                      ),
-                      
-                     
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.blue,
+                          ),
+                          onPressed: () => {
+                                setState(() {
+                                  isLogin = !isLogin;
+                                })
+                              },
+                          child: Text(isLogin ? 'Sign up' : 'Sign in')),
                     ],
                   ),
                 ],

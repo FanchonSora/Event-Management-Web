@@ -1,5 +1,4 @@
 import 'package:geolocator/geolocator.dart';
-import 'package:mobile/utils/logging.dart';
 import 'dart:async';
 
 class LocatorUtil {
