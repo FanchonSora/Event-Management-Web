@@ -18,7 +18,12 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const HomePage(), 
+// Suggested code may be subject to a license. Learn more: ~LicenseLog:1139805454.
+      home: LoginPage(),
+      routes: {
+        '/home': (context) => const HomePage(),
+        '/login': (context) => LoginPage()
+      },
     );
   }
 }

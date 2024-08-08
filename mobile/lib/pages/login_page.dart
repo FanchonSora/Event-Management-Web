@@ -10,8 +10,9 @@ class LoginPage extends StatelessWidget {
   final passwordController = TextEditingController();
 
   // sign user in method
-  void signUserIn() {
+  void signUserIn(context) {
     // Implement sign-in functionality here
+    Navigator.of(context).pushNamed('/home');
   }
 
   @override
@@ -41,9 +42,10 @@ class LoginPage extends StatelessWidget {
                           Color.fromARGB(0, 255, 255, 255),
                           Color.fromARGB(38, 255, 255, 255),
                           Color.fromARGB(54, 255, 255, 255),
-                          Color.fromARGB(96, 255, 255, 255), 
-                          Color.fromARGB(128, 255, 255, 255)],
-                        ),
+                          Color.fromARGB(96, 255, 255, 255),
+                          Color.fromARGB(128, 255, 255, 255)
+                        ],
+                      ),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
                     padding: const EdgeInsets.all(16.0),
@@ -127,16 +129,16 @@ class LoginPage extends StatelessWidget {
                                   decorationColor: Colors.grey,
                                   decorationThickness: 1.0,
                                   fontStyle: FontStyle.italic,
-                                  decorationStyle: TextDecorationStyle.solid, 
+                                  decorationStyle: TextDecorationStyle.solid,
                                 ),
                               ),
                             ],
                           ),
                         ),
                         const SizedBox(height: 20),
-                        MyButton(
-                          onTap: signUserIn,
-                        ),
+                        MyButton(onTap: () {
+                          signUserIn(context);
+                        }),
                         const SizedBox(height: 20),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -149,7 +151,8 @@ class LoginPage extends StatelessWidget {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
                                 child: Text(
                                   "Or continue with",
                                   style: TextStyle(color: Colors.grey[400]),
