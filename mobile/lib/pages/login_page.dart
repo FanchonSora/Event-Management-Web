@@ -1,26 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/components/square_tile.dart';
 import 'package:mobile/components/my_button.dart';
+import 'package:mobile/components/my_text_field.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobile/pages/home_page.dart';
 import 'package:mobile/utils/logging.dart';
 import 'dart:convert';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+
+}
+
+class _LoginPageState extends State<LoginPage> {
   // text editing controllers
+  final emailController= TextEditingController();
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
+  final repeatPasswordController = TextEditingController();
 
+  bool isLogin = true;
   // sign user in method
   Future<void> signUserIn(BuildContext context) async {
      
-    logger.d({
-        'username': usernameController.text,
-        'password': passwordController.text,
-      });
-
     final response = await http.post(
       Uri.parse('http://172.17.0.1:8000/v1/auth/login'), 
       headers: {
@@ -37,6 +42,7 @@ class LoginPage extends StatelessWidget {
       if (context.mounted) {
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage()));
       }
+
     }
   }
 
@@ -52,7 +58,7 @@ class LoginPage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  const SizedBox(height: 60),
+                  const SizedBox(height: 40),
                   const Text(
                     'App lam voi Ngan',
                     style: TextStyle(fontSize: 24, color: Colors.white),
@@ -77,67 +83,28 @@ class LoginPage extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        TextField(
-                          controller: usernameController,
-                          style: const TextStyle(
-                              color: Color.fromARGB(255, 255, 255, 255)),
-                          decoration: const InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color.fromARGB(255, 255, 255, 255),
-                                width: 1.0,
-                              ),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20.0)),
-                            ),
-                            labelText: 'Username',
-                            labelStyle: TextStyle(
-                                color: Color.fromRGBO(165, 165, 165, 0.773)),
-                            floatingLabelStyle: TextStyle(
-                                color: Color.fromARGB(255, 123, 199, 250),
-                                fontSize: 16),
-                            filled: true,
-                            fillColor: Color.fromARGB(34, 9, 30, 51),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                                borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 123, 199, 250),
-                                  width: 1.0,
-                                )),
-                          ),
+                        if(!isLogin)MyTextField(
+                          controller: emailController,
+                          labelText: 'Email',
+                          obscure: false,
                         ),
                         const SizedBox(height: 20),
-                        TextField(
-                          style: const TextStyle(
-                              color: Color.fromARGB(255, 255, 255, 255)),
+                        MyTextField(
+                          controller: usernameController,
+                          labelText: 'Username',
+                          obscure: false,
+                        ),
+                        const SizedBox(height: 20),
+                        MyTextField(
                           controller: passwordController,
-                          decoration: const InputDecoration(
-                            labelText: 'Password',
-                            labelStyle: TextStyle(
-                                color: Color.fromRGBO(165, 165, 165, 0.773)),
-                            filled: true,
-                            fillColor: Color.fromARGB(41, 9, 30, 51),
-                            floatingLabelStyle: TextStyle(
-                                color: Color.fromARGB(255, 123, 199, 250),
-                                fontSize: 16),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color.fromARGB(255, 255, 255, 255),
-                                width: 1.0,
-                              ),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20.0)),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                                borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 12, 158, 255),
-                                  width: 1.0,
-                                )),
-                          ),
-                          obscureText: true,
+                          labelText: 'Password',
+                          obscure: true,
+                        ),
+                        const SizedBox(height: 20),
+                        if(!isLogin) MyTextField( 
+                          controller: repeatPasswordController,
+                          labelText: 'Repeat Password',
+                          obscure: true,
                         ),
                         const SizedBox(height: 20),
                         const Padding(
@@ -212,17 +179,23 @@ class LoginPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Don\'t have an account?',
+                        isLogin ? 'Don\'t have an account?' : 'Already have an account? ',
                         style: TextStyle(color: Colors.grey[500]),
                       ),
                       const SizedBox(width: 4),
-                      const Text(
-                        'Register now',
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 81, 173, 248),
-                          fontWeight: FontWeight.bold,
-                        ),
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.blue,
+                        ),                  
+                        onPressed: () => {
+                          setState(() {
+                            isLogin = !isLogin;
+                          })
+                        },
+                        child: Text(isLogin ? 'Sign up' : 'Sign in')
                       ),
+                      
+                     
                     ],
                   ),
                 ],
