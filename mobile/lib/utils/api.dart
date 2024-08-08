@@ -1,4 +1,9 @@
 import 'dart:io' show Platform;
+import 'package:http/http.dart';
+import 'package:cronet_http/cronet_http.dart';
+import 'package:cupertino_http/cupertino_http.dart';
+import 'package:fetch_client/fetch_client.dart';
+import 'package:http/io_client.dart';
 
 String get localhost {
   if (Platform.isAndroid) {
@@ -7,4 +12,14 @@ String get localhost {
     return 'http://127.0.0.1:8000';
   }
   return 'http://localhost:8000';
+}
+
+Client get httpClient {
+  if (Platform.isAndroid) {
+    return CronetClient.defaultCronetEngine();
+  }
+  if (Platform.isIOS) {
+    return CupertinoClient.defaultSessionConfiguration();
+  }
+  return IOClient();
 }

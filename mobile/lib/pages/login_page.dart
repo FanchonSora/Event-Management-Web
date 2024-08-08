@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mobile/components/square_tile.dart';
 import 'package:mobile/components/my_button.dart';
 import 'package:mobile/components/my_text_field.dart';
-import 'package:http/http.dart' as http;
-import 'package:mobile/pages/home_page.dart';
 import 'package:mobile/utils/logging.dart';
 import 'dart:convert';
 import 'package:mobile/utils/api.dart';
@@ -25,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
   bool isLogin = true;
   // sign user in method
   Future<void> signUserIn(BuildContext context) async {
-    final response = await http.post(Uri.parse('$localhost/v1/auth/login'),
+    final response = await httpClient.post(Uri.parse('$localhost/v1/auth/login'),
         headers: {"Content-type": "application/json"},
         body: jsonEncode({
           'username': usernameController.text,
