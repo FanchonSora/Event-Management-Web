@@ -33,11 +33,9 @@ class _LoginPageState extends State<LoginPage> {
         }));
     logger.i(response.body);
 
-    if (response.statusCode == 200) {
-      if (context.mounted) {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => const HomePage()));
-      }
+    if (context.mounted) {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => const HomePage()));
     }
   }
 
