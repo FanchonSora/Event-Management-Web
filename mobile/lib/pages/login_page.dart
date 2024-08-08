@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/components/square_tile.dart';
 import 'package:mobile/components/my_button.dart';
+import 'package:http/http.dart' as http;
+import 'package:mobile/pages/home_page.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -10,8 +12,23 @@ class LoginPage extends StatelessWidget {
   final passwordController = TextEditingController();
 
   // sign user in method
-  void signUserIn() {
-    // Implement sign-in functionality here
+  Future<void> signUserIn(BuildContext context) async {
+    final response = await http.post(
+      Uri.parse('http://localhost:8000/v1/auth/login'),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: {
+        'username': usernameController.text,
+        'password': passwordController.text,
+      },
+    );
+
+    if (response.statusCode == 200){
+      if (context.mounted) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomePage()));
+      }
+    }
   }
 
   @override
@@ -135,7 +152,9 @@ class LoginPage extends StatelessWidget {
                         ),
                         const SizedBox(height: 20),
                         MyButton(
-                          onTap: signUserIn,
+                          onTap: () => {
+                            signUserIn(context)
+                          },
                         ),
                         const SizedBox(height: 20),
                         Padding(
