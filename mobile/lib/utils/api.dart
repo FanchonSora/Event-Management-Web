@@ -8,7 +8,7 @@ import 'package:flutter/foundation.dart';
 
 String get localhost {
   if (kReleaseMode) {
-    return "http://appcuangan.hungqbui.xyz";
+    return "https://appcuangan.hungqbui.xyz";
   }
 
   if (Platform.isAndroid) {
