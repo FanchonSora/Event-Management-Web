@@ -1,17 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/components/square_tile.dart';
 import 'package:mobile/components/my_button.dart';
+import 'package:mobile/components/my_text_field.dart';
+import 'package:mobile/pages/landing_page.dart';
+import 'package:mobile/utils/logging.dart';
+import 'dart:convert';
+import 'package:mobile/utils/api.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   // text editing controllers
+  final emailController = TextEditingController();
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
+  final repeatPasswordController = TextEditingController();
 
+  bool isLogin = true;
   // sign user in method
-  void signUserIn() {
-    // Implement sign-in functionality here
+  Future<void> signUserIn(BuildContext context) async {
+    final response =
+        await httpClient.post(Uri.parse('$localhost/v1/auth/login'),
+            headers: {"Content-type": "application/json"},
+            body: jsonEncode({
+              'username': usernameController.text,
+              'password': passwordController.text,
+            }));
+    logger.i(response.body);
+
+    if (context.mounted) {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => const MyLandingPage()));
+    }
   }
 
   @override
@@ -26,7 +51,7 @@ class LoginPage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  const SizedBox(height: 60),
+                  const SizedBox(height: 40),
                   const Text(
                     'App lam voi Ngan',
                     style: TextStyle(fontSize: 24, color: Colors.white),
@@ -41,77 +66,41 @@ class LoginPage extends StatelessWidget {
                           Color.fromARGB(0, 255, 255, 255),
                           Color.fromARGB(38, 255, 255, 255),
                           Color.fromARGB(54, 255, 255, 255),
-                          Color.fromARGB(96, 255, 255, 255), 
-                          Color.fromARGB(128, 255, 255, 255)],
-                        ),
+                          Color.fromARGB(96, 255, 255, 255),
+                          Color.fromARGB(128, 255, 255, 255)
+                        ],
+                      ),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        TextField(
-                          controller: usernameController,
-                          style: const TextStyle(
-                              color: Color.fromARGB(255, 255, 255, 255)),
-                          decoration: const InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color.fromARGB(255, 255, 255, 255),
-                                width: 1.0,
-                              ),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20.0)),
-                            ),
-                            labelText: 'Username',
-                            labelStyle: TextStyle(
-                                color: Color.fromRGBO(165, 165, 165, 0.773)),
-                            floatingLabelStyle: TextStyle(
-                                color: Color.fromARGB(255, 123, 199, 250),
-                                fontSize: 16),
-                            filled: true,
-                            fillColor: Color.fromARGB(34, 9, 30, 51),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                                borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 123, 199, 250),
-                                  width: 1.0,
-                                )),
+                        if (!isLogin)
+                          MyTextField(
+                            controller: emailController,
+                            labelText: 'Email',
+                            obscure: false,
                           ),
+                        const SizedBox(height: 20),
+                        MyTextField(
+                          controller: usernameController,
+                          labelText: 'Username',
+                          obscure: false,
                         ),
                         const SizedBox(height: 20),
-                        TextField(
-                          style: const TextStyle(
-                              color: Color.fromARGB(255, 255, 255, 255)),
+                        MyTextField(
                           controller: passwordController,
-                          decoration: const InputDecoration(
-                            labelText: 'Password',
-                            labelStyle: TextStyle(
-                                color: Color.fromRGBO(165, 165, 165, 0.773)),
-                            filled: true,
-                            fillColor: Color.fromARGB(41, 9, 30, 51),
-                            floatingLabelStyle: TextStyle(
-                                color: Color.fromARGB(255, 123, 199, 250),
-                                fontSize: 16),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Color.fromARGB(255, 255, 255, 255),
-                                width: 1.0,
-                              ),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20.0)),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0)),
-                                borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 12, 158, 255),
-                                  width: 1.0,
-                                )),
-                          ),
-                          obscureText: true,
+                          labelText: 'Password',
+                          obscure: true,
                         ),
+                        const SizedBox(height: 20),
+                        if (!isLogin)
+                          MyTextField(
+                            controller: repeatPasswordController,
+                            labelText: 'Repeat Password',
+                            obscure: true,
+                          ),
                         const SizedBox(height: 20),
                         const Padding(
                           padding: EdgeInsets.symmetric(horizontal: 0),
@@ -127,7 +116,7 @@ class LoginPage extends StatelessWidget {
                                   decorationColor: Colors.grey,
                                   decorationThickness: 1.0,
                                   fontStyle: FontStyle.italic,
-                                  decorationStyle: TextDecorationStyle.solid, 
+                                  decorationStyle: TextDecorationStyle.solid,
                                 ),
                               ),
                             ],
@@ -135,7 +124,7 @@ class LoginPage extends StatelessWidget {
                         ),
                         const SizedBox(height: 20),
                         MyButton(
-                          onTap: signUserIn,
+                          onTap: () => {signUserIn(context)},
                         ),
                         const SizedBox(height: 20),
                         Padding(
@@ -149,7 +138,8 @@ class LoginPage extends StatelessWidget {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
                                 child: Text(
                                   "Or continue with",
                                   style: TextStyle(color: Colors.grey[400]),
@@ -182,17 +172,22 @@ class LoginPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Don\'t have an account?',
+                        isLogin
+                            ? 'Don\'t have an account?'
+                            : 'Already have an account? ',
                         style: TextStyle(color: Colors.grey[500]),
                       ),
                       const SizedBox(width: 4),
-                      const Text(
-                        'Register now',
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 81, 173, 248),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      TextButton(
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.blue,
+                          ),
+                          onPressed: () => {
+                                setState(() {
+                                  isLogin = !isLogin;
+                                })
+                              },
+                          child: Text(isLogin ? 'Sign up' : 'Sign in')),
                     ],
                   ),
                 ],
