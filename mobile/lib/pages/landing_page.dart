@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:mobile/utils/logging.dart';
 import 'package:mobile/utils/get_geo_location.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:mobile/utils/websocket_channel.dart';
 
 class MyLandingPage extends StatefulWidget {
   const MyLandingPage({super.key});
@@ -17,6 +16,7 @@ class MyLandingPage extends StatefulWidget {
 class _MyLandingPageState extends State<MyLandingPage> {
   int _counter = 0;
   String posString = "Position";
+  final SocketService _socketService = SocketService();
 
   void initState() {
     super.initState();
@@ -26,8 +26,18 @@ class _MyLandingPageState extends State<MyLandingPage> {
                   logger.i(position);
                   setState(() {
                     posString = position.toString();
+
+                  });
+                  _socketService.sendMessage('positionUpdate', {
+                    "data": position.toString(),
                   });
                 })));
+  }
+
+  void sendData() {
+    _socketService.sendMessage('greet', {
+      "data": "Hello from Flutter",
+    });
   }
 
   @override
@@ -41,10 +51,11 @@ class _MyLandingPageState extends State<MyLandingPage> {
           Center(
             child: FloatingActionButton(
               child: Text('$_counter'),
-              onPressed: () => {
+              onPressed: () {
+                sendData();
                 setState(() {
                   _counter++;
-                })
+                });
               },
             ),
           ),
