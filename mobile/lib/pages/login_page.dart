@@ -3,6 +3,7 @@ import 'package:mobile/components/square_tile.dart';
 import 'package:mobile/components/my_button.dart';
 import 'package:mobile/components/my_text_field.dart';
 import 'package:mobile/pages/landing_page.dart';
+import 'package:mobile/pages/home_page.dart';
 import 'package:mobile/utils/logging.dart';
 import 'dart:convert';
 import 'package:mobile/utils/api.dart';
@@ -35,9 +36,41 @@ class _LoginPageState extends State<LoginPage> {
 
     if (context.mounted) {
       Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => const MyLandingPage()));
+          .push(MaterialPageRoute(builder: (context) =>  HomePage()));
     }
   }
+
+  Future<void> registerUser(BuildContext context) async {
+    final response = await httpClient.post(
+      Uri.parse('$localhost/v1/auth/register'), 
+      headers: {
+        "Content-type": "application/json"
+      },
+      body: jsonEncode({
+        'email': emailController.text,
+        'username': usernameController.text,
+        'password': passwordController.text,
+      })
+    );
+    logger.i(response.body);
+    if (context.mounted) {
+       ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Registration successful!')),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) =>  HomePage()),
+        );
+    }
+    else {
+      if(context.mounted){
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Registration failed!')),
+        );
+      }
+    }
+  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +157,14 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         const SizedBox(height: 20),
                         MyButton(
-                          onTap: () => {signUserIn(context)},
+                          buttonText: isLogin ? 'Sign in' : 'Sign up',
+                          onTap: () => {
+                            if (isLogin) {
+                              signUserIn(context)
+                            } else {
+                              registerUser(context)
+                            }
+                          },
                         ),
                         const SizedBox(height: 20),
                         Padding(

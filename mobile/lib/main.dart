@@ -3,7 +3,8 @@ import 'package:mobile/pages/landing_page.dart';
 import 'package:mobile/pages/login_page.dart';
 import 'package:mobile/utils/logging.dart';
 import 'package:mobile/pages/home_page.dart';
-
+import 'package:mobile/pages/main_event.dart';
+import 'package:mobile/components/detail_button.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -21,8 +22,8 @@ class MyApp extends StatelessWidget {
       ),
       home: const LoginPage(),
       routes: {
-        '/home': (context) => const HomePage(),
-        '/login': (context) => const LoginPage()
+        '/home': (context) =>  HomePage(),
+        '/login': (context) => const LoginPage(),
       },
     );
   }
