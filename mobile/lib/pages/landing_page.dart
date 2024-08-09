@@ -17,21 +17,21 @@ class _MyLandingPageState extends State<MyLandingPage> {
   int _counter = 0;
   String posString = "Position";
   final SocketService _socketService = SocketService();
+  final LocatorUtil _locatorUtil = LocatorUtil();
 
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) =>
-        LocatorUtil.determinePosition()
-            .then((stream) => stream.asBroadcastStream().listen((position) {
-                  logger.i(position);
-                  setState(() {
-                    posString = position.toString();
-
-                  });
-                  _socketService.sendMessage('positionUpdate', {
-                    "data": position.toString(),
-                  });
-                })));
+        _locatorUtil.determinePosition()
+            .then((stream) {
+              stream.listen((position) {
+                setState(() {
+                  posString = position.toString();
+                });
+                _socketService.sendMessage("positionUpdate", position.toString());
+              });
+            }
+    ));
   }
 
   void sendData() {
