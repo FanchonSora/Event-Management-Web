@@ -3,7 +3,6 @@ import 'package:http/http.dart';
 import 'package:cronet_http/cronet_http.dart';
 import 'package:cupertino_http/cupertino_http.dart';
 import 'package:fetch_client/fetch_client.dart';
-import 'package:http/io_client.dart';
 import 'package:flutter/foundation.dart';
 
 String get localhost {

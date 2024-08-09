@@ -1,5 +1,6 @@
 import 'package:mobile/utils/logging.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import './api.dart';
 
 class SocketService {
   late IO.Socket _socket;
@@ -16,7 +17,7 @@ class SocketService {
   }
 
   void _initializeSocket() {
-    _socket = IO.io('http://10.0.2.2:8000', <String, dynamic>{
+    _socket = IO.io(localhost, <String, dynamic>{
       'transports': ['websocket'],
     });
 
