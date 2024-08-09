@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile/components/square_tile.dart';
 import 'package:mobile/components/my_button.dart';
 import 'package:mobile/components/my_text_field.dart';
+import 'package:mobile/pages/landing_page.dart';
 import 'package:mobile/utils/logging.dart';
 import 'dart:convert';
 import 'package:mobile/utils/api.dart';
@@ -23,16 +24,18 @@ class _LoginPageState extends State<LoginPage> {
   bool isLogin = true;
   // sign user in method
   Future<void> signUserIn(BuildContext context) async {
-    final response = await httpClient.post(Uri.parse('$localhost/v1/auth/login'),
-        headers: {"Content-type": "application/json"},
-        body: jsonEncode({
-          'username': usernameController.text,
-          'password': passwordController.text,
-        }));
+    final response =
+        await httpClient.post(Uri.parse('$localhost/v1/auth/login'),
+            headers: {"Content-type": "application/json"},
+            body: jsonEncode({
+              'username': usernameController.text,
+              'password': passwordController.text,
+            }));
     logger.i(response.body);
 
     if (context.mounted) {
-      Navigator.of(context).pushNamed('/home');
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => const MyLandingPage()));
     }
   }
 

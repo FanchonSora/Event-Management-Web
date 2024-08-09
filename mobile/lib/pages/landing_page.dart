@@ -16,6 +16,7 @@ class MyLandingPage extends StatefulWidget {
 
 class _MyLandingPageState extends State<MyLandingPage> {
   int _counter = 0;
+  String posString = "Position";
 
   void initState() {
     super.initState();
@@ -23,6 +24,9 @@ class _MyLandingPageState extends State<MyLandingPage> {
         LocatorUtil.determinePosition()
             .then((stream) => stream.asBroadcastStream().listen((position) {
                   logger.i(position);
+                  setState(() {
+                    posString = position.toString();
+                  });
                 })));
   }
 
@@ -35,13 +39,17 @@ class _MyLandingPageState extends State<MyLandingPage> {
       body: Column(
         children: [
           Center(
-            child: FloatingActionButton( child:Text('$_counter'), onPressed: () => {
-              setState(() {
-                _counter++;
-              })
-            },),
+            child: FloatingActionButton(
+              child: Text('$_counter'),
+              onPressed: () => {
+                setState(() {
+                  _counter++;
+                })
+              },
+            ),
           ),
-          _counter == 10 ? const Text("Hoa gay") : const Text("Hoa ko gay")
+          Text("$_counter"),
+          Text(posString)
         ],
       ),
     );
